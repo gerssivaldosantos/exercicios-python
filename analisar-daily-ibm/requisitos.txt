@@ -1,0 +1,3 @@
+Questão  # Faça um programa que abre o arquivo 
+daily_IBM.csv e responda em qual data houve a maior oscilação de 
+valor em um mesmo dia e quais foram os valores máximo e mínimo nessa data.

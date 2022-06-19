@@ -1,0 +1,17 @@
+Faça um programa que abre o arquivo domcasmurro.txt e monta um histograma das palavras do livro - ou seja, uma contagem de frequência. Use um dicionário para isso.
+
+Ex: para a string 'eu não programo em Java, mas programo em Python', o dicionário ficaria:
+
+{
+    'eu': 1,
+    'não': 1,
+    'programo': 2,
+    'em': 2,
+    'mas': 1,
+    'Python': 1
+}
+Importante: para que seu histograma seja confiável, você precisará "limpar" o texto original: diferenças entre maiúsculas e minúsculas devem ser eliminadas, e caracteres como sinais de pontuação e aspas devem ser removidos.
+
+Importante²: o parâmetro opcional encoding='utf-8' irá garantir que o arquivo deste exercício será interpretado corretamente pelo Python.
+
+def limpa_linha(linha: str) -> list:
