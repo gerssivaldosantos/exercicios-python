@@ -64,27 +64,25 @@ def montar_banda(banda):
         bandas_existentes = obter_json(path_bandas)
         musicos_existentes = obter_json(path_musicos)
         
-        if bandas_existentes and musicos_existentes:
+        for musico_id in banda['integrantes']:
+            # Confere se algum dos integrantes que estão na banda
+            # não existe no banco de dados
+            if musico_id not in map(lambda musico: musico['id'], musicos_existentes):
+                raise Exception(f'Não foi encontrado músico com id {musico_id}')
 
-            for musico_id in banda['integrantes']:
-                # Confere se algum dos integrantes que estão na banda
-                # não existe no banco de dados
-                if musico_id not in map(lambda musico: musico['id'], musicos_existentes):
-                    raise Exception(f'Não foi encontrado músico com id {musico_id}')
+        for item in bandas_existentes:
+            ids_item = sorted(item['integrantes'])
+            ids_banda = sorted(banda['integrantes'])
 
-            for item in bandas_existentes:
-                ids_item = sorted(item['integrantes'])
-                ids_banda = sorted(banda['integrantes'])
+            if (ids_item == ids_banda):
+                raise Exception(f'Erro: Configuração de integrantes já existe na banda "{item["nome"]}"')
 
-                if (ids_item == ids_banda):
-                    raise Exception(f'Erro: Configuração de integrantes já existe na banda "{item["nome"]}"')
+            if (item['nome'] == banda['nome']):
+                raise Exception(f'Erro: Nome da banda já existe na base de dados')
 
-                if (item['nome'] == banda['nome']):
-                    raise Exception(f'Erro: Nome da banda já existe na base de dados')
-
-            banda['id'] = len(bandas_existentes) + 1
-            bandas.append(banda)
-            gravar_json(bandas, path_bandas)
+        banda['id'] = len(bandas_existentes) + 1
+        bandas.append(banda)
+        gravar_json(bandas, path_bandas)
 
     except Exception as erro:
         print(erro)
@@ -106,16 +104,15 @@ def form_musico():
         while genero == '':
             print('Valor invalido, por favor, tente novamente')
             genero = input()
-        generos_musicais.append(genero)
+        generos_musicais.append(genero.upper())
         print('Deseja adicionar outro genero musical? (s/n)')
         genero = input()
         if (genero[0]).lower() == 'n':
             break
     musico = {
-        'nome': nome,
+        'nome': nome.upper(),
         'email': email,
         'generos_musicais': generos_musicais
     }
     return musico
         
-validar_email('oi')
