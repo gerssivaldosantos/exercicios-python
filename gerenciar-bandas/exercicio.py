@@ -19,12 +19,17 @@ path_bandas = 'bandas.json'
 path_musicos = 'musicos.json'
 
 def validar_email(email:str)-> bool:
+    """ Valida a sintaxe do email e busca se o email já existe no banco de dados
+    irá retornar um booleano indicando se o endereço de email passado pode ser utilizado """
+    musicos_existentes = obter_json(path_musicos)
+    emails_existentes = list(map(lambda musico: musico['email'], musicos_existentes))
+    if email in emails_existentes:
+        return False
     return bool(re.search('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$',email))
 
 def obter_json(path: str) -> list | dict :
-    """ recive the path of anywhere json and return
-    an list of content
-    str -> anything
+    """ Recebe um path de arquivo json e retorna seu conteúdo
+    ou cria e retorna uma lista vazia caso o arquivo não exista.
     """
     try:
         dados = json.load(open(path))
@@ -36,15 +41,17 @@ def obter_json(path: str) -> list | dict :
     
 def gravar_json(data: any, path: str) -> None:
     """ Escreve as informações em um arquivo Json, recebe a informação 
-    e o nome do arquivo que será salvo em "outputs" """
-
-    with open(path, 'w') as outfile:
-        json.dump(data,
-                    outfile,
-                    indent=4,
-                    sort_keys=True,
-                    default=str,
-                    ensure_ascii=False)
+    e o nome do arquivo """
+    try:
+        with open(path, 'w') as outfile:
+            json.dump(data,
+                        outfile,
+                        indent=4,
+                        sort_keys=True,
+                        default=str,
+                        ensure_ascii=False)
+    except Exception as erro:
+        print('Algum erro ocorreu ao salvar o arquivo')
 
 def cadastrar_musico(musico):
     musicos_existentes = obter_json(path_musicos)
@@ -83,7 +90,6 @@ def montar_banda(banda):
         print(erro)
 
 def form_musico():
-    #TODO: verificar a existência do email no banco de dados
     nome = input('Nome: ')
     email = input('Email: ')
     while not validar_email(email):
@@ -112,4 +118,4 @@ def form_musico():
     }
     return musico
         
-form_musico()
+validar_email('oi')
