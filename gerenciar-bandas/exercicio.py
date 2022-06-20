@@ -1,4 +1,5 @@
 import json
+import re 
 
 bandas = [
     {
@@ -18,8 +19,7 @@ path_bandas = 'bandas.json'
 path_musicos = 'musicos.json'
 
 def validar_email(email:str)-> bool:
-    
-    return False
+    return bool(re.search('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$',email))
 
 def obter_json(path: str) -> list | dict | None:
     """ recive the path of anywhere json and return
