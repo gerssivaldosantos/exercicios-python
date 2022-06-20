@@ -18,6 +18,13 @@ bandas = [
 path_bandas = 'bandas.json'
 path_musicos = 'musicos.json'
 
+# TODO: criar função "maior id" que recebe um json e e retorna o maior id da banda ou musico
+# isso vai ser usado na geração de novos ids quando cadastrar banda ou id
+
+# TODO: refatorar a inserção de nova banda em uma função separada do menu
+
+# TODO: fazer funções de obteção de bandas e musicos existentes e funções para exclui-los
+
 def validar_email(email:str)-> bool:
     """ Valida a sintaxe do email e busca se o email já existe no banco de dados
     irá retornar um booleano indicando se o endereço de email passado pode ser utilizado """
@@ -63,7 +70,7 @@ def montar_banda(banda):
     try:
         bandas_existentes = obter_json(path_bandas)
         musicos_existentes = obter_json(path_musicos)
-        
+
         for musico_id in banda['integrantes']:
             # Confere se algum dos integrantes que estão na banda
             # não existe no banco de dados
@@ -115,4 +122,44 @@ def form_musico():
         'generos_musicais': generos_musicais
     }
     return musico
-        
+
+def menu():
+    print('1 - Cadastrar músico')
+    print('2 - Cadastrar banda')
+    print('3 - Sair')
+    opcao = input('Opção: ')
+    return opcao
+
+def main():
+    while True:
+        opcao = menu()
+        if opcao == '1':
+            musico = form_musico()
+            cadastrar_musico(musico)
+        elif opcao == '2':
+            banda = {
+                'id': len(obter_json(path_bandas)) + 1,
+                'nome': input('Nome: ').upper(),
+                'integrantes': []
+            }
+            while True:
+                print('Adicionar integrante: ', end='')
+                integrante = input()
+                while integrante == '':
+                    print('Valor invalido, por favor, tente novamente')
+                    integrante = input()
+                integrante = int(integrante)
+                if integrante not in map(lambda musico: musico['id'], obter_json(path_musicos)):
+                    print('Integrante não encontrado')
+                    continue
+                banda['integrantes'].append(integrante)
+                print('Deseja adicionar outro integrante? (s/n)')
+                integrante = input()
+                if (integrante[0]).lower() == 'n':
+                    break
+            montar_banda(banda)
+        elif opcao == '3':
+            break
+
+if __name__ == '__main__':
+    main()
