@@ -21,7 +21,7 @@ path_musicos = 'musicos.json'
 def validar_email(email:str)-> bool:
     return bool(re.search('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$',email))
 
-def obter_json(path: str) -> list | dict | None:
+def obter_json(path: str) -> list | dict :
     """ recive the path of anywhere json and return
     an list of content
     str -> anything
@@ -30,7 +30,9 @@ def obter_json(path: str) -> list | dict | None:
         dados = json.load(open(path))
         return dados
     except FileNotFoundError:
+        return []
         print(f'Arquivo não encontrado no path: {path_bandas}')
+        print('Criando arquivo...')
     
 def gravar_json(data: any, path: str) -> None:
     """ Escreve as informações em um arquivo Json, recebe a informação 
@@ -47,6 +49,7 @@ def gravar_json(data: any, path: str) -> None:
 def cadastrar_musico(musico):
     musicos_existentes = obter_json(path_musicos)
     musicos_existentes.append(musico)
+    musico['id'] = len(musicos_existentes)
     gravar_json(musicos_existentes, path_musicos)
 
 def montar_banda(banda):
@@ -79,5 +82,34 @@ def montar_banda(banda):
     except Exception as erro:
         print(erro)
 
-
-montar_banda({'id': 1, 'nome': 'Tunico e tinoco', 'integrantes': [3]})
+def form_musico():
+    #TODO: verificar a existência do email no banco de dados
+    nome = input('Nome: ')
+    email = input('Email: ')
+    while not validar_email(email):
+        print('Email inválido')
+        email = input('Email: ')
+    generos_musicais = []
+    while True:
+        if len(generos_musicais) == 0:
+            print('Adicionar gênero musical: ', end='')
+        else:
+            print(f'Gêneros já adicionados: {", ".join(generos_musicais)}')
+            print('Adicionar outro gênero musical: ', end='')
+        genero = input()
+        while genero == '':
+            print('Valor invalido, por favor, tente novamente')
+            genero = input()
+        generos_musicais.append(genero)
+        print('Deseja adicionar outro genero musical? (s/n)')
+        genero = input()
+        if (genero[0]).lower() == 'n':
+            break
+    musico = {
+        'nome': nome,
+        'email': email,
+        'generos_musicais': generos_musicais
+    }
+    return musico
+        
+form_musico()
