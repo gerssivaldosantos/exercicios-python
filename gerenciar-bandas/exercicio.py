@@ -1,6 +1,5 @@
-from cmath import exp
 import json
-import re 
+import string 
 
 bandas = [
     {
@@ -18,9 +17,6 @@ bandas = [
 
 path_bandas = 'bandas.json'
 path_musicos = 'musicos.json'
-
-# TODO: criar função "maior id" que recebe um json e e retorna o maior id da banda ou musico
-# isso vai ser usado na geração de novos ids quando cadastrar banda ou id
 
 # TODO: refatorar a inserção de nova banda em uma função separada do menu
 
@@ -41,11 +37,20 @@ def obter_maior_id(dados: list) -> int:
 def validar_email(email:str)-> bool:
     """ Valida a sintaxe do email e busca se o email já existe no banco de dados
     irá retornar um booleano indicando se o endereço de email passado pode ser utilizado """
+    if email.count('@') != 1:
+        return False
+    alfabeto =  list(map(chr, range(97, 123)))
+    simbolos = ['@','.', '_']
+    numeros = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+    for caracter in email:
+        if caracter not in alfabeto + simbolos + numeros:
+            return False
     musicos_existentes = obter_json(path_musicos)
     emails_existentes = list(map(lambda musico: musico['email'], musicos_existentes))
     if email in emails_existentes:
         return False
-    return bool(re.search('^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$',email))
+    return True
+    
 
 def obter_json(path: str) -> list | dict :
     """ Recebe um path de arquivo json e retorna seu conteúdo
