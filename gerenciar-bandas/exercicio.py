@@ -1,5 +1,4 @@
 import json
-import string 
 
 path_bandas = 'bandas.json'
 path_musicos = 'musicos.json'
