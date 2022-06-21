@@ -48,12 +48,12 @@ O programa deverá exibir na tela todas as combinações possíveis de músicos
 
 # TODO: fazer funções de obteção de músicos por nome, email, genero e instrumento.
 
-def buscar_musico_email(email: str) -> dict | None:
+def buscar_musico_email(email: str) -> list:
     musicos_existentes = obter_json(path_musicos)
     for musico in musicos_existentes:
         if musico['email'] == email:
-            return musico
-    return None
+            return [musico]
+    return []
 
 def buscar_musico_nome(nome: str) -> list:
     musicos_existentes = obter_json(path_musicos)
