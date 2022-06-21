@@ -48,6 +48,13 @@ O programa deverá exibir na tela todas as combinações possíveis de músicos
 
 # TODO: fazer funções de obteção de músicos por nome, email, genero e instrumento.
 
+def mostrar_musicos(musicos):
+    print(f'\nResultado da busca:\n{len(musicos)} Músicos encontrados')
+    for musico in musicos:
+        print('------------------------------------')
+        print(f'nome: {musico["nome"]}\nemail: {musico["email"]}\ngêneros: {", ".join(musico["generos_musicais"])} ')
+    print('------------------------------------')
+
 def buscar_musico_email(email: str) -> list:
     musicos_existentes = obter_json(path_musicos)
     for musico in musicos_existentes:
@@ -236,11 +243,11 @@ def main():
             banda = form_banda()
             montar_banda(banda)
         elif opcao == '3.1':
-            buscar_musico_nome(input('Digite o nome do músico: '))
+            mostrar_musicos(buscar_musico_nome(input('Digite o nome do músico: ')))
         elif opcao == '3.2':
-            buscar_musico_genero(input('Digite o gênero músical'))
+            mostrar_musicos(buscar_musico_genero(input('Digite o gênero músical')))
         elif opcao == '3.3':
-            buscar_musico_email(input('Digite o email do músico: '))
+            mostrar_musicos(buscar_musico_email(input('Digite o email do músico: ')))
         elif opcao == '0':
             break
 
