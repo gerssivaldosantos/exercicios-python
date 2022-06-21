@@ -8,12 +8,11 @@ path_musicos = 'musicos.json'
 --------------------------- CheckList ----------------------------
 
 [V] Cadastrar músicos
-[X] Buscar músicos por email
-[X] Buscar músicos por nome
-[X] Buscar músicos por gênero músical
-[X] Buscar músicos por nome
+[V] Buscar músicos por email
+[V] Buscar músicos por nome
+[V] Buscar músicos por gênero músical
 [X] Modificar músicos
-[V] Montar bandas
+[X] Montar bandas
 [V] Sair
 
 -------------- Regras dos dados de cadastro do músico --------------
@@ -48,6 +47,31 @@ O programa deverá exibir na tela todas as combinações possíveis de músicos
 """
 
 # TODO: fazer funções de obteção de músicos por nome, email, genero e instrumento.
+
+def buscar_musico_email(email: str) -> dict | None:
+    musicos_existentes = obter_json(path_musicos)
+    for musico in musicos_existentes:
+        if musico['email'] == email:
+            return musico
+    return None
+
+def buscar_musico_nome(nome: str) -> list:
+    musicos_existentes = obter_json(path_musicos)
+    musicos_encontrados = []
+    nome = nome.upper()
+    for musico in musicos_existentes:
+        if nome in musico['nome']:
+            musicos_encontrados.append(musico)
+    return musicos_encontrados
+
+def buscar_musico_genero(genero: str) -> list:
+    musicos_existentes = obter_json(path_musicos)
+    musicos_encontrados = []
+    genero = genero.upper()
+    for musico in musicos_existentes:
+        if genero in musico['generos_musicais']:
+            musicos_encontrados.append(musico)
+    return musicos_encontrados
 
 def obter_maior_id(dados: list) -> int:
     try:
@@ -192,8 +216,14 @@ def form_banda():
 def menu():
     print('1 - Cadastrar músico')
     print('2 - Cadastrar banda')
-    print('3 - Sair')
+    print('3 - Buscar Músicos')
+    print('0 - Sair')
     opcao = input('Opção: ')
+    if opcao == '3':
+        print('1 - Buscar por nome')
+        print('2 - Buscar por gênero musical')
+        print('3 - Buscar por email')
+        opcao += '.' + input()
     return opcao
 
 def main():
@@ -205,7 +235,13 @@ def main():
         elif opcao == '2':
             banda = form_banda()
             montar_banda(banda)
-        elif opcao == '3':
+        elif opcao == '3.1':
+            buscar_musico_nome(input('Digite o nome do músico: '))
+        elif opcao == '3.2':
+            buscar_musico_genero(input('Digite o gênero músical'))
+        elif opcao == '3.3':
+            buscar_musico_email(input('Digite o email do músico: '))
+        elif opcao == '0':
             break
 
 if __name__ == '__main__':
