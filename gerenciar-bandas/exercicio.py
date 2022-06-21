@@ -4,6 +4,50 @@ import string
 path_bandas = 'bandas.json'
 path_musicos = 'musicos.json'
 
+"""
+
+--------------------------- CheckList ----------------------------
+
+[V] Cadastrar músicos
+[X] Buscar músicos por email
+[X] Buscar músicos por nome
+[X] Buscar músicos por gênero músical
+[X] Buscar músicos por nome
+[X] Modificar músicos
+[V] Montar bandas
+[V] Sair
+
+-------------- Regras dos dados de cadastro do músico --------------
+
+* Nome (string contendo apenas letras e espaço)
+
+* E-mail (string contendo apenas letras, underscore (_), ponto (.), 
+dígitos numéricos e, obrigatoriamente, exatamente 1 arroba (@))
+
+* Gêneros musicais (mínimo 1, usuário pode digitar quantos forem necessários)
+
+* Instrumentos (mínimo 1, usuário pode digitar quantos forem necessários)
+
+As entradas devem ser validadas seguindo as regras. O e-mail deve ser único: 
+se ele já existe, o cadastro não deve ser concluído.
+
+----------------- regras atualização dados músico -----------------
+
+* Na modificação de um usuário, será feita uma busca especificamente por e-mail.
+
+* É permitido adicionar ou remover gêneros e instrumentos. 
+
+* Não é permitido mudar nome ou e-mail.
+
+------------------- regras cadastro banda -------------------------
+
+Na opção de montar bandas, o usuário deverá informar o número desejado de 
+músicos, o instrumento de cada um dos músicos (1 por músico) e 1 gênero. 
+O programa deverá exibir na tela todas as combinações possíveis de músicos
+(e-mail + instrumento).
+
+"""
+
 # TODO: fazer funções de obteção de músicos por nome, email, genero e instrumento.
 
 def obter_maior_id(dados: list) -> int:
