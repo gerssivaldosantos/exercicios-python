@@ -175,6 +175,7 @@ def form_musico():
         print('Email inválido')
         email = input('Email: ')
     generos_musicais = []
+    instrumentos = []
     while True:
         if len(generos_musicais) == 0:
             print('Adicionar gênero musical: ', end='')
@@ -190,10 +191,26 @@ def form_musico():
         genero = input()
         if (genero[0]).lower() == 'n':
             break
+    while True:
+        if len(instrumentos) == 0:
+            print('Adicionar instrumento: ', end='')
+        else:
+            print(f'Instrumento já adicionados: {", ".join(instrumentos)}')
+            print('Adicionar outro instrumento: ', end='')
+        genero = input()
+        while genero == '':
+            print('Valor invalido, por favor, tente novamente')
+            genero = input()
+        instrumentos.append(genero.upper())
+        print('Deseja adicionar outro instrumento? (s/n)')
+        genero = input()
+        if (genero[0]).lower() == 'n':
+            break
     musico = {
         'nome': nome.upper(),
         'email': email,
-        'generos_musicais': generos_musicais
+        'generos_musicais': generos_musicais,
+        'instrumentos': instrumentos
     }
     return musico
 
