@@ -1,26 +1,10 @@
 import json
 import string 
 
-bandas = [
-    {
-        'id': 1,
-        'nome': 'Metallica',
-        'integrantes': [
-            1,
-            3,
-            4,
-            5,
-            6
-        ]
-    }
-]
-
 path_bandas = 'bandas.json'
 path_musicos = 'musicos.json'
 
-# TODO: fazer funções de obteção de bandas e musicos existentes e funções para exclui-los
-
-# TODO: refatora função de adicionar generos musicais para aceitar somente 1
+# TODO: fazer funções de obteção de músicos por nome, email, genero e instrumento.
 
 def obter_maior_id(dados: list) -> int:
     try:
