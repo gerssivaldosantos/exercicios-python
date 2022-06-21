@@ -1,3 +1,4 @@
+from cmath import exp
 import json
 import re 
 
@@ -25,6 +26,18 @@ path_musicos = 'musicos.json'
 
 # TODO: fazer funções de obteção de bandas e musicos existentes e funções para exclui-los
 
+def obter_maior_id(dados: list) -> int:
+    try:
+        maior_id = 0
+        for item in dados:
+            if int(item['id']) > maior_id:
+                maior_id = int(item['id'])
+        return maior_id
+    except KeyError:
+        print('Foi encontrada uma incosistência nos dados guardados.')
+    except:
+        print('Erro desconhecido')
+
 def validar_email(email:str)-> bool:
     """ Valida a sintaxe do email e busca se o email já existe no banco de dados
     irá retornar um booleano indicando se o endereço de email passado pode ser utilizado """
@@ -42,9 +55,9 @@ def obter_json(path: str) -> list | dict :
         dados = json.load(open(path))
         return dados
     except FileNotFoundError:
-        return []
         print(f'Arquivo não encontrado no path: {path_bandas}')
         print('Criando arquivo...')
+        return []
     
 def gravar_json(data: any, path: str) -> None:
     """ Escreve as informações em um arquivo Json, recebe a informação 
@@ -62,8 +75,8 @@ def gravar_json(data: any, path: str) -> None:
 
 def cadastrar_musico(musico):
     musicos_existentes = obter_json(path_musicos)
+    musico['id'] = obter_maior_id(musicos_existentes) + 1
     musicos_existentes.append(musico)
-    musico['id'] = len(musicos_existentes)
     gravar_json(musicos_existentes, path_musicos)
 
 def montar_banda(banda):
@@ -138,7 +151,7 @@ def main():
             cadastrar_musico(musico)
         elif opcao == '2':
             banda = {
-                'id': len(obter_json(path_bandas)) + 1,
+                'id': obter_maior_id(obter_json(path_bandas)) + 1,
                 'nome': input('Nome: ').upper(),
                 'integrantes': []
             }
