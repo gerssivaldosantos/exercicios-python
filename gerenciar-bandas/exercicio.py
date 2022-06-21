@@ -18,8 +18,6 @@ bandas = [
 path_bandas = 'bandas.json'
 path_musicos = 'musicos.json'
 
-# TODO: refatorar a inserção de nova banda em uma função separada do menu
-
 # TODO: fazer funções de obteção de bandas e musicos existentes e funções para exclui-los
 
 def obter_maior_id(dados: list) -> int:
@@ -51,7 +49,6 @@ def validar_email(email:str)-> bool:
         return False
     return True
     
-
 def obter_json(path: str) -> list | dict :
     """ Recebe um path de arquivo json e retorna seu conteúdo
     ou cria e retorna uma lista vazia caso o arquivo não exista.
@@ -105,7 +102,6 @@ def montar_banda(banda):
             if (item['nome'] == banda['nome']):
                 raise Exception(f'Erro: Nome da banda já existe na base de dados')
 
-        banda['id'] = len(bandas_existentes) + 1
         bandas.append(banda)
         gravar_json(bandas, path_bandas)
 
@@ -141,6 +137,29 @@ def form_musico():
     }
     return musico
 
+def form_banda():
+    banda = {
+        'id': obter_maior_id(obter_json(path_bandas)) + 1,
+        'nome': input('Nome: ').upper(),
+        'integrantes': []
+    }
+    while True:
+        print('Adicionar integrante: ', end='')
+        integrante = input()
+        while integrante == '':
+            print('Valor invalido, por favor, tente novamente')
+            integrante = input()
+        integrante = int(integrante)
+        if integrante not in map(lambda musico: musico['id'], obter_json(path_musicos)):
+            print('Integrante não encontrado')
+            continue
+        banda['integrantes'].append(integrante)
+        print('Deseja adicionar outro integrante? (s/n)')
+        integrante = input()
+        if (integrante[0]).lower() == 'n':
+            break
+    return banda
+
 def menu():
     print('1 - Cadastrar músico')
     print('2 - Cadastrar banda')
@@ -155,26 +174,7 @@ def main():
             musico = form_musico()
             cadastrar_musico(musico)
         elif opcao == '2':
-            banda = {
-                'id': obter_maior_id(obter_json(path_bandas)) + 1,
-                'nome': input('Nome: ').upper(),
-                'integrantes': []
-            }
-            while True:
-                print('Adicionar integrante: ', end='')
-                integrante = input()
-                while integrante == '':
-                    print('Valor invalido, por favor, tente novamente')
-                    integrante = input()
-                integrante = int(integrante)
-                if integrante not in map(lambda musico: musico['id'], obter_json(path_musicos)):
-                    print('Integrante não encontrado')
-                    continue
-                banda['integrantes'].append(integrante)
-                print('Deseja adicionar outro integrante? (s/n)')
-                integrante = input()
-                if (integrante[0]).lower() == 'n':
-                    break
+            banda = form_banda()
             montar_banda(banda)
         elif opcao == '3':
             break
