@@ -20,6 +20,8 @@ path_musicos = 'musicos.json'
 
 # TODO: fazer funções de obteção de bandas e musicos existentes e funções para exclui-los
 
+# TODO: refatora função de adicionar generos musicais para aceitar somente 1
+
 def obter_maior_id(dados: list) -> int:
     try:
         maior_id = 0
@@ -89,21 +91,21 @@ def montar_banda(banda):
         for musico_id in banda['integrantes']:
             # Confere se algum dos integrantes que estão na banda
             # não existe no banco de dados
-            if musico_id not in map(lambda musico: musico['id'], musicos_existentes):
+            if musico_id not in list(map(lambda musico: musico['id'], musicos_existentes)):
                 raise Exception(f'Não foi encontrado músico com id {musico_id}')
+
+        ids_banda = sorted(banda['integrantes'])
 
         for item in bandas_existentes:
             ids_item = sorted(item['integrantes'])
-            ids_banda = sorted(banda['integrantes'])
-
             if (ids_item == ids_banda):
                 raise Exception(f'Erro: Configuração de integrantes já existe na banda "{item["nome"]}"')
 
             if (item['nome'] == banda['nome']):
                 raise Exception(f'Erro: Nome da banda já existe na base de dados')
 
-        bandas.append(banda)
-        gravar_json(bandas, path_bandas)
+        bandas_existentes.append(banda)
+        gravar_json(bandas_existentes, path_bandas)
 
     except Exception as erro:
         print(erro)
@@ -151,7 +153,7 @@ def form_banda():
             integrante = input()
         integrante = int(integrante)
         if integrante not in map(lambda musico: musico['id'], obter_json(path_musicos)):
-            print('Integrante não encontrado')
+            print('Músico não encontrado')
             continue
         banda['integrantes'].append(integrante)
         print('Deseja adicionar outro integrante? (s/n)')
