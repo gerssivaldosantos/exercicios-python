@@ -309,6 +309,22 @@ def main():
                 instrumentos = criar_lista(instrumentos)
                 musico['instrumentos'] += instrumentos
                 sobrescrever_id(musico, path_musicos)
+            elif opcao == '3':
+                while (opcao != 'n'):
+                    for i in range(len(musico['generos_musicais'])):
+                        print(f'{i} - {musico["generos_musicais"][i]}')
+                    index_genero = int(input('Digite o índice do gênero musical que deseja remover: '))
+                    musico['generos_musicais'].pop(index_genero)
+                    sobrescrever_id(musico, path_musicos)
+                    opcao = input('Deseja remover outro gênero musical? (s/n) ')
+            elif opcao == '4':
+                while (opcao != 'n'):
+                    for i in range(len(musico['instrumentos'])):
+                        print(f'{i} - {musico["instrumentos"][i]}')
+                    index_instrumento = int(input('Digite o índice do instrumento que deseja remover: '))
+                    musico['instrumentos'].pop(index_instrumento)
+                    sobrescrever_id(musico, path_musicos)
+                    opcao = input('Deseja remover outro instrumento? (s/n) ')
             
         elif opcao == '3.1':
             mostrar_musicos(buscar_musico_nome(input('Digite o nome do músico: ')))
