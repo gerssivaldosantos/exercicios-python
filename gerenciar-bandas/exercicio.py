@@ -212,26 +212,30 @@ def form_musico():
     return musico
 
 def form_banda():
+    parar = False
+    instrumentos = []
+    nome = input('Nome: ').upper()
+    genero = ''
+    while parar != True:
+        numero_integrantes = int(input('Número de integrantes da banda: '))
+        if numero_integrantes == 0:
+            print('Número invalido')
+        else:
+            while numero_integrantes != len(instrumentos):
+                instrumentos = criar_lista(input('Instrumentos (separados por vírgula): '))
+                instrumentos = sorted(set(instrumentos))
+                if len(instrumentos) != numero_integrantes:
+                    print('Valores inválidos, é permitido somente 1 instrumento por integrante, e somente 1 instrumento de cada tipo')
+        while genero == '':
+            genero = input('Gênero musical: ')
+        parar = True
     banda = {
         'id': obter_maior_id(obter_json(path_bandas)) + 1,
-        'nome': input('Nome: ').upper(),
-        'integrantes': []
+        'nome': nome,
+        'integrantes': [],
+        'genero_musical': genero,
+        'instrumentos': instrumentos
     }
-    while True:
-        print('Adicionar integrante: ', end='')
-        integrante = input()
-        while integrante == '':
-            print('Valor invalido, por favor, tente novamente')
-            integrante = input()
-        integrante = int(integrante)
-        if integrante not in map(lambda musico: musico['id'], obter_json(path_musicos)):
-            print('Músico não encontrado')
-            continue
-        banda['integrantes'].append(integrante)
-        print('Deseja adicionar outro integrante? (s/n)')
-        integrante = input()
-        if (integrante[0]).lower() == 'n':
-            break
     return banda
 
 def menu():
@@ -306,7 +310,7 @@ def main():
             mostrar_bandas(buscar_banda_nome(input('Digite o nome da banda: ')))
         elif opcao == '5':
             banda = form_banda()
-            montar_banda(banda)
+            print(banda)
         elif opcao == '0':
             break
 
