@@ -47,6 +47,8 @@ O programa deverá exibir na tela todas as combinações possíveis de músicos
 
 """
 
+# TODO: criar lógica para criar configuração de bandas
+
 def sobrescrever_id(dado, path):
     dados_existentes = obter_json(path)
     for i in range(len(dados_existentes)):
@@ -69,18 +71,18 @@ def buscar_banda_nome(nome: str) -> list:
     return bandas_encontradas
 
 def mostrar_bandas(bandas:list) -> None:
-    print(f'\nNúmero de dados encontrados: {len(bandas)}')
+    print(f'Número de dados encontrados: {len(bandas)}')
     for banda in bandas:
-        print('------------------------------------')
+        print()
         print(f'nome: {banda["nome"]}\nmusicos: {", ".join(banda["integrantes"])} ')
-    print('------------------------------------')
+    print()
 
 def mostrar_musicos(musicos: list) -> None:
-    print(f'\nNúmero de dados encontrados: {len(musicos)}')
+    print(f'Número de dados encontrados: {len(musicos)}')
     for musico in musicos:
-        print('------------------------------------')
+        print()
         print(f'nome: {musico["nome"]}\nemail: {musico["email"]}\ngêneros: {", ".join(musico["generos_musicais"])}\nInstrumentos: {", ".join(musico["instrumentos"])}')
-    print('------------------------------------')
+    print()
 
 def buscar_musico_email(email: str) -> list:
     musicos_existentes = obter_json(path_musicos)
@@ -144,8 +146,7 @@ def obter_json(path: str) -> list | dict :
         dados = json.load(open(path))
         return dados
     except FileNotFoundError:
-        print(f'Arquivo não encontrado no path: {path_bandas}')
-        print('Caso necessário, será criado.')
+
         return []
     
 def gravar_json(data: any, path: str) -> None:
@@ -172,25 +173,29 @@ def montar_banda(banda):
     try:
         bandas_existentes = obter_json(path_bandas)
         musicos_existentes = obter_json(path_musicos)
-
-        for musico_id in banda['integrantes']:
-            # Confere se algum dos integrantes que estão na banda
-            # não existe no banco de dados
-            if musico_id not in list(map(lambda musico: musico['id'], musicos_existentes)):
-                raise Exception(f'Não foi encontrado músico com id {musico_id}')
-
-        ids_banda = sorted(banda['integrantes'])
-
+        musicos_compativeis_genero = []
         for item in bandas_existentes:
-            ids_item = sorted(item['integrantes'])
-            if (ids_item == ids_banda):
-                raise Exception(f'Erro: Configuração de integrantes já existe na banda "{item["nome"]}"')
-
             if (item['nome'] == banda['nome']):
                 raise Exception(f'Erro: Nome da banda já existe na base de dados')
-
-        bandas_existentes.append(banda)
-        gravar_json(bandas_existentes, path_bandas)
+        for musico in musicos_existentes:
+            if musico['generos_musicais']:
+                if banda['genero_musical'] in list(map(lambda genero: genero, musico['generos_musicais'])):
+                    musicos_compativeis_genero.append(musico)
+        if len(musicos_compativeis_genero) < len(banda['instrumentos']):
+            raise Exception(f'Erro: Não há musicos suficientes compatíveis com o gênero musical da banda')
+        for instrumento in banda['instrumentos']:
+            listas_instrumentos_tocados = list(map(lambda musico: musico['instrumentos'], musicos_compativeis_genero))
+            instrumentos_tocados = []
+            for lista in listas_instrumentos_tocados:
+                for item in lista:
+                    instrumentos_tocados.append(item)
+            if instrumento not in instrumentos_tocados:
+                raise Exception(f'Erro: Não há musicos que possam tocar o instrumento {instrumento}')
+        
+        for instrumentos in banda['instrumentos']:
+            print(f'Músicos que tocam {instrumentos}')
+            mostrar_musicos(list(map(lambda musico: musico, musicos_compativeis_genero)))
+        
 
     except Exception as erro:
         print(erro)
@@ -309,10 +314,10 @@ def main():
         elif opcao == '4':
             mostrar_bandas(buscar_banda_nome(input('Digite o nome da banda: ')))
         elif opcao == '5':
-            banda = form_banda()
-            print(banda)
+            montar_banda(form_banda())
         elif opcao == '0':
             break
 
 if __name__ == '__main__':
-    main()
+    #main()
+     montar_banda({'id': 1, 'nome': 'NOME', 'integrantes': [], 'genero_musical': 'FUNK', 'instrumentos': ['BAIXO', 'VIOLÃO']})
