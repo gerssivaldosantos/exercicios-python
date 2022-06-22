@@ -47,8 +47,6 @@ O programa deverá exibir na tela todas as combinações possíveis de músicos
 
 """
 
-# TODO: criar lógica para criar configuração de bandas
-
 def sobrescrever_id(dado, path):
     dados_existentes = obter_json(path)
     for i in range(len(dados_existentes)):
@@ -195,7 +193,8 @@ def montar_banda(banda):
         for instrumentos in banda['instrumentos']:
             print(f'Músicos que tocam {instrumentos}')
             mostrar_musicos(list(map(lambda musico: musico, musicos_compativeis_genero)))
-        
+
+        # TODO: criar lógica para criar configurações possiveis de integrantes na banda
 
     except Exception as erro:
         print(erro)
