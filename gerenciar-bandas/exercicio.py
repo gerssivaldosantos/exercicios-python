@@ -208,13 +208,15 @@ def validar_banda(banda: dict) -> list:
         print(f"Erro: {erro}")
         return []
 
-def montar_banda(banda):
-    for instrumento in banda['instrumentos']:
-        print('----------------------------------------------------')
-        print(f'Músicos que tocam {instrumento}')
-        musicos_que_tocam_instrumento = list(filter(lambda musico: instrumento in musico['instrumentos'], musicos_compativeis_genero))
-        mostrar_musicos(musicos_que_tocam_instrumento)
+def form_montar_banda(musicos, banda):
+    """ retorna todas as possibilidades de combinações possiveis de banda considerando os instrumentos """
+    #TODO: criar form listando todos os artistas para determinado instrumento e oferecer opção de adicionar á banda
+    pass
+    
+
+def criar_combinacoes_bandas():
     # TODO: criar lógica para criar configurações possiveis de integrantes na banda
+    pass 
 
 def form_musico():
     nome = input('Nome: ')
@@ -331,16 +333,16 @@ def main():
         elif opcao == '4':
             mostrar_bandas(buscar_banda_nome(input('Digite o nome da banda: ')))
         elif opcao == '5':
-            montar_banda(form_banda())
+            pass
         elif opcao == '0':
             sair = True
 
 if __name__ == '__main__':
-    #main()
-    mostrar_musicos(validar_banda({
+    banda_teste = {
     'id': 1, 
     'nome': 'NOME DA BANDA', 
     'integrantes': [], 
     'genero_musical': 'ROCK', 
     'instrumentos': ['GUITARRA', 'TECLADO', 'VIOLAO']
-    }))
+    }
+    main()
