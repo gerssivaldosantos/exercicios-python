@@ -47,7 +47,17 @@ O programa deverá exibir na tela todas as combinações possíveis de músicos
 
 """
 
-# TODO: fazer funções de obteção de músicos por nome, email, genero e instrumento.
+def sobrescrever_id(dado, path):
+    dados_existentes = obter_json(path)
+    for i in range(len(dados_existentes)):
+        if dados_existentes[i]['id'] == dado['id']:
+            dados_existentes[i] = dado
+            break
+    gravar_json(dados_existentes, path)
+    
+def criar_lista(listagem: str) -> list:
+    """ Recebe uma string e retorna uma lista de strings separadas por vírgula."""
+    return " ".join(listagem.split()).upper().split(', ')
 
 def buscar_banda_nome(nome: str) -> list:
     bandas_existentes = obter_json(path_bandas)
@@ -69,7 +79,7 @@ def mostrar_musicos(musicos: list) -> None:
     print(f'\nNúmero de dados encontrados: {len(musicos)}')
     for musico in musicos:
         print('------------------------------------')
-        print(f'nome: {musico["nome"]}\nemail: {musico["email"]}\ngêneros: {", ".join(musico["generos_musicais"])} ')
+        print(f'nome: {musico["nome"]}\nemail: {musico["email"]}\ngêneros: {", ".join(musico["generos_musicais"])}\nInstrumentos: {", ".join(musico["instrumentos"])}')
     print('------------------------------------')
 
 def buscar_musico_email(email: str) -> list:
@@ -257,10 +267,10 @@ def form_banda():
 def menu():
     print(f'\n------- MENU -------')
     print('1 - Cadastrar músico')
-    print('2 - Cadastrar banda')
+    print('2 - Editar Dados do músico')
     print('3 - Buscar Músicos')
     print('4 - Buscar Bandas')
-    print('5 - Sair')
+    print('5 - Cadastrar banda')
     print('0 - Sair')
     opcao = input('Opção: ')
     if opcao == '3':
@@ -277,16 +287,40 @@ def main():
             musico = form_musico()
             cadastrar_musico(musico)
         elif opcao == '2':
-            banda = form_banda()
-            montar_banda(banda)
+            musico = buscar_musico_email(input('Email: '))
+            if musico is []:
+                print('Músico não encontrado')
+                continue
+            mostrar_musicos(musico)
+            musico = musico[0]
+            print('1 - Adicionar gêneros musicais')
+            print('2 - Adicionar instrumentos')
+            print('3 - Remover gêneros musicais')
+            print('4 - Remover instrumentos')
+            print('5 - Cancelar')
+            opcao = input('Opção: ')
+            if opcao == '1':
+                generos = input('Digite os gêneros musicais separados por vírgula: ')
+                generos = criar_lista(generos)
+                musico['generos_musicais'] += generos
+                sobrescrever_id(musico, path_musicos)
+            elif opcao == '2':
+                instrumentos = input('Digite os instrumentos separados por vírgula (guitarra, bateria, teclado): ')
+                instrumentos = criar_lista(instrumentos)
+                musico['instrumentos'] += instrumentos
+                sobrescrever_id(musico, path_musicos)
+            
         elif opcao == '3.1':
             mostrar_musicos(buscar_musico_nome(input('Digite o nome do músico: ')))
         elif opcao == '3.2':
-            mostrar_musicos(buscar_musico_genero(input('Digite o gênero músical')))
+            mostrar_musicos(buscar_musico_genero(input('Digite o gênero músical: ')))
         elif opcao == '3.3':
             mostrar_musicos(buscar_musico_email(input('Digite o email do músico: ')))
         elif opcao == '4':
             mostrar_bandas(buscar_banda_nome(input('Digite o nome da banda: ')))
+        elif opcao == '5':
+            banda = form_banda()
+            montar_banda(banda)
         elif opcao == '0':
             break
 
