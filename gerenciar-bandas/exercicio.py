@@ -169,11 +169,14 @@ def cadastrar_musico(musico):
     musicos_existentes.append(musico)
     gravar_json(musicos_existentes, path_musicos)
 
-def montar_banda(banda):
+def validar_banda(banda: dict) -> list:
+    """ Verifica se a configuração de banda passa é passivel a ser criada, caso seja, retorna
+    os musicos cadastrados que podem ser adicionados a banda. """
     try:
         bandas_existentes = obter_json(path_bandas)
         musicos_existentes = obter_json(path_musicos)
         musicos_compativeis_genero = []
+        musicos_compativeis_genero_instrumento = []
         for item in bandas_existentes:
             if (item['nome'] == banda['nome']):
                 raise Exception(f'Nome da banda já existe na base de dados')
@@ -195,16 +198,23 @@ def montar_banda(banda):
                     instrumentos_tocados.append(item)
             if instrumento not in instrumentos_tocados:
                 raise Exception(f'Não há musicos que possam tocar o instrumento {instrumento}')
-        
-        for instrumento in banda['instrumentos']:
-            print('----------------------------------------------------')
-            print(f'Músicos que tocam {instrumento}')
-            musicos_que_tocam_instrumento = list(filter(lambda musico: instrumento in musico['instrumentos'], musicos_compativeis_genero))
-            mostrar_musicos(musicos_que_tocam_instrumento)
-        # TODO: criar lógica para criar configurações possiveis de integrantes na banda
-
+        for musico in musicos_compativeis_genero:
+            for instrumento in musico['instrumentos']:
+                if instrumento in banda['instrumentos']:
+                    musicos_compativeis_genero_instrumento.append(musico)
+                    continue
+        return musicos_compativeis_genero_instrumento
     except Exception as erro:
         print(f"Erro: {erro}")
+        return []
+
+def montar_banda(banda):
+    for instrumento in banda['instrumentos']:
+        print('----------------------------------------------------')
+        print(f'Músicos que tocam {instrumento}')
+        musicos_que_tocam_instrumento = list(filter(lambda musico: instrumento in musico['instrumentos'], musicos_compativeis_genero))
+        mostrar_musicos(musicos_que_tocam_instrumento)
+    # TODO: criar lógica para criar configurações possiveis de integrantes na banda
 
 def form_musico():
     nome = input('Nome: ')
@@ -327,10 +337,10 @@ def main():
 
 if __name__ == '__main__':
     #main()
-    montar_banda({
+    mostrar_musicos(validar_banda({
     'id': 1, 
     'nome': 'NOME DA BANDA', 
     'integrantes': [], 
     'genero_musical': 'ROCK', 
     'instrumentos': ['GUITARRA', 'TECLADO', 'VIOLAO']
-    })
+    }))
