@@ -10,9 +10,9 @@ path_musicos = 'musicos.json'
 [V] Cadastrar músicos
 [V] Buscar músicos por email
 [V] Buscar músicos por nome
-[V] Buscar músicos por gênero músical
+[V] Buscar músicos por gênero musical
 [V] Buscar bandas por nome - EXTRA
-[X] Modificar músicos
+[V] Modificar músicos
 [X] Montar bandas
 [V] Sair
 
