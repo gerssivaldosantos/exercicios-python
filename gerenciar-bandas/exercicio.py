@@ -176,13 +176,13 @@ def montar_banda(banda):
         musicos_compativeis_genero = []
         for item in bandas_existentes:
             if (item['nome'] == banda['nome']):
-                raise Exception(f'Erro: Nome da banda já existe na base de dados')
+                raise Exception(f'Nome da banda já existe na base de dados')
         for musico in musicos_existentes:
             if musico['generos_musicais']:
                 if banda['genero_musical'] in list(map(lambda genero: genero, musico['generos_musicais'])):
                     musicos_compativeis_genero.append(musico)
         if len(musicos_compativeis_genero) < len(banda['instrumentos']):
-            raise Exception(f'Erro: Não há musicos suficientes compatíveis com o gênero musical da banda')
+            raise Exception(f'Não há musicos suficientes compatíveis com o gênero musical da banda')
         for instrumento in banda['instrumentos']:
             listas_instrumentos_tocados = list(map(lambda musico: musico['instrumentos'], musicos_compativeis_genero))
             instrumentos_tocados = []
@@ -190,7 +190,7 @@ def montar_banda(banda):
                 for item in lista:
                     instrumentos_tocados.append(item)
             if instrumento not in instrumentos_tocados:
-                raise Exception(f'Erro: Não há musicos que possam tocar o instrumento {instrumento}')
+                raise Exception(f'Não há musicos que possam tocar o instrumento {instrumento}')
         
         for instrumentos in banda['instrumentos']:
             print(f'Músicos que tocam {instrumentos}')
@@ -199,7 +199,7 @@ def montar_banda(banda):
         # TODO: criar lógica para criar configurações possiveis de integrantes na banda
 
     except Exception as erro:
-        print(erro)
+        print(f"Erro: {erro}")
 
 def form_musico():
     nome = input('Nome: ')
@@ -322,5 +322,10 @@ def main():
 
 if __name__ == '__main__':
     #main()
-    #montar_banda({'id': 1, 'nome': 'NOME', 'integrantes': [], 'genero_musical': 'FUNK', 'instrumentos': ['BAIXO', 'VIOLÃO']})
-    print(criar_lista('violã           o                 , guitarra ,   flauta                  '))
+    montar_banda({
+    'id': 1, 
+    'nome': 'NOME DA BANDA', 
+    'integrantes': [], 
+    'genero_musical': 'rock', 
+    'instrumentos': ['GUITARRA', 'TECLADO', 'VIOLAO']
+    })
