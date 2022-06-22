@@ -57,7 +57,9 @@ def sobrescrever_id(dado, path):
     
 def criar_lista(listagem: str) -> list:
     """ Recebe uma string e retorna uma lista de strings separadas por vírgula."""
-    return " ".join(listagem.split()).upper().split(', ')
+    return list(map(
+        lambda item: item.strip().replace(' ', ''),
+        " ".join(listagem.split()).upper().split(', ')))
 
 def buscar_banda_nome(nome: str) -> list:
     bandas_existentes = obter_json(path_bandas)
@@ -255,11 +257,12 @@ def menu():
         print('1 - Buscar por nome')
         print('2 - Buscar por gênero musical')
         print('3 - Buscar por email')
-        opcao += '.' + input()
+        opcao += '.' + input('Opção: ')
     return opcao
 
 def main():
-    while True:
+    sair = False
+    while not sair:
         opcao = menu()
         if opcao == '1':
             musico = form_musico()
@@ -315,8 +318,9 @@ def main():
         elif opcao == '5':
             montar_banda(form_banda())
         elif opcao == '0':
-            break
+            sair = True
 
 if __name__ == '__main__':
     #main()
-     montar_banda({'id': 1, 'nome': 'NOME', 'integrantes': [], 'genero_musical': 'FUNK', 'instrumentos': ['BAIXO', 'VIOLÃO']})
+    #montar_banda({'id': 1, 'nome': 'NOME', 'integrantes': [], 'genero_musical': 'FUNK', 'instrumentos': ['BAIXO', 'VIOLÃO']})
+    print(criar_lista('violã           o                 , guitarra ,   flauta                  '))
