@@ -201,38 +201,8 @@ def form_musico():
     while not validar_email(email):
         print('Email inválido')
         email = input('Email: ')
-    generos_musicais = []
-    instrumentos = []
-    while True:
-        if len(generos_musicais) == 0:
-            print('Adicionar gênero musical: ', end='')
-        else:
-            print(f'Gêneros já adicionados: {", ".join(generos_musicais)}')
-            print('Adicionar outro gênero musical: ', end='')
-        genero = input()
-        while genero == '':
-            print('Valor invalido, por favor, tente novamente')
-            genero = input()
-        generos_musicais.append(genero.upper())
-        print('Deseja adicionar outro genero musical? (s/n)')
-        genero = input()
-        if (genero[0]).lower() == 'n':
-            break
-    while True:
-        if len(instrumentos) == 0:
-            print('Adicionar instrumento: ', end='')
-        else:
-            print(f'Instrumento já adicionados: {", ".join(instrumentos)}')
-            print('Adicionar outro instrumento: ', end='')
-        genero = input()
-        while genero == '':
-            print('Valor invalido, por favor, tente novamente')
-            genero = input()
-        instrumentos.append(genero.upper())
-        print('Deseja adicionar outro instrumento? (s/n)')
-        genero = input()
-        if (genero[0]).lower() == 'n':
-            break
+    generos_musicais = criar_lista(input('Gêneros musicais (separados por vírgula): '))
+    instrumentos = criar_lista(input('Instrumentos (separados por vírgula): '))
     musico = {
         'nome': nome.upper(),
         'email': email,
@@ -300,12 +270,12 @@ def main():
             print('5 - Cancelar')
             opcao = input('Opção: ')
             if opcao == '1':
-                generos = input('Digite os gêneros musicais separados por vírgula: ')
+                generos = input('Gêneros musicais (separados por vírgula): ')
                 generos = criar_lista(generos)
                 musico['generos_musicais'] += generos
                 sobrescrever_id(musico, path_musicos)
             elif opcao == '2':
-                instrumentos = input('Digite os instrumentos separados por vírgula (guitarra, bateria, teclado): ')
+                instrumentos = input('Instrumentos (separados por vírgula): ')
                 instrumentos = criar_lista(instrumentos)
                 musico['instrumentos'] += instrumentos
                 sobrescrever_id(musico, path_musicos)
