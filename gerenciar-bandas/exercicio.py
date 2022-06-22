@@ -11,6 +11,7 @@ path_musicos = 'musicos.json'
 [V] Buscar músicos por email
 [V] Buscar músicos por nome
 [V] Buscar músicos por gênero músical
+[V] Buscar bandas por nome - EXTRA
 [X] Modificar músicos
 [X] Montar bandas
 [V] Sair
@@ -48,8 +49,24 @@ O programa deverá exibir na tela todas as combinações possíveis de músicos
 
 # TODO: fazer funções de obteção de músicos por nome, email, genero e instrumento.
 
-def mostrar_musicos(musicos):
-    print(f'\nResultado da busca:\n{len(musicos)} Músicos encontrados')
+def buscar_banda_nome(nome: str) -> list:
+    bandas_existentes = obter_json(path_bandas)
+    bandas_encontradas = []
+    nome = nome.upper()
+    for banda in bandas_existentes:
+        if nome in banda['nome']:
+            bandas_encontradas.append(banda)
+    return bandas_encontradas
+
+def mostrar_bandas(bandas:list) -> None:
+    print(f'\nNúmero de dados encontrados: {len(bandas)}')
+    for banda in bandas:
+        print('------------------------------------')
+        print(f'nome: {banda["nome"]}\nmusicos: {", ".join(banda["integrantes"])} ')
+    print('------------------------------------')
+
+def mostrar_musicos(musicos: list) -> None:
+    print(f'\nNúmero de dados encontrados: {len(musicos)}')
     for musico in musicos:
         print('------------------------------------')
         print(f'nome: {musico["nome"]}\nemail: {musico["email"]}\ngêneros: {", ".join(musico["generos_musicais"])} ')
@@ -118,7 +135,7 @@ def obter_json(path: str) -> list | dict :
         return dados
     except FileNotFoundError:
         print(f'Arquivo não encontrado no path: {path_bandas}')
-        print('Criando arquivo...')
+        print('Caso necessário, será criado.')
         return []
     
 def gravar_json(data: any, path: str) -> None:
@@ -238,9 +255,12 @@ def form_banda():
     return banda
 
 def menu():
+    print(f'\n------- MENU -------')
     print('1 - Cadastrar músico')
     print('2 - Cadastrar banda')
     print('3 - Buscar Músicos')
+    print('4 - Buscar Bandas')
+    print('5 - Sair')
     print('0 - Sair')
     opcao = input('Opção: ')
     if opcao == '3':
@@ -265,6 +285,8 @@ def main():
             mostrar_musicos(buscar_musico_genero(input('Digite o gênero músical')))
         elif opcao == '3.3':
             mostrar_musicos(buscar_musico_email(input('Digite o email do músico: ')))
+        elif opcao == '4':
+            mostrar_bandas(buscar_banda_nome(input('Digite o nome da banda: ')))
         elif opcao == '0':
             break
 
