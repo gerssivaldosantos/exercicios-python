@@ -178,12 +178,16 @@ def montar_banda(banda):
             if (item['nome'] == banda['nome']):
                 raise Exception(f'Nome da banda já existe na base de dados')
         for musico in musicos_existentes:
+            """ Verifica se existem músicos suficientes que tenham o gênero musical
+            escolhido pela banda """
             if musico['generos_musicais']:
                 if banda['genero_musical'] in list(map(lambda genero: genero, musico['generos_musicais'])):
                     musicos_compativeis_genero.append(musico)
         if len(musicos_compativeis_genero) < len(banda['instrumentos']):
             raise Exception(f'Não há musicos suficientes compatíveis com o gênero musical da banda')
+
         for instrumento in banda['instrumentos']:
+            """ Verifica se existe músico do mesmo gênero músical da banda que toque o instrumento que ela precisa """
             listas_instrumentos_tocados = list(map(lambda musico: musico['instrumentos'], musicos_compativeis_genero))
             instrumentos_tocados = []
             for lista in listas_instrumentos_tocados:
@@ -192,10 +196,11 @@ def montar_banda(banda):
             if instrumento not in instrumentos_tocados:
                 raise Exception(f'Não há musicos que possam tocar o instrumento {instrumento}')
         
-        for instrumentos in banda['instrumentos']:
-            print(f'Músicos que tocam {instrumentos}')
-            mostrar_musicos(list(map(lambda musico: musico, musicos_compativeis_genero)))
-
+        for instrumento in banda['instrumentos']:
+            print('----------------------------------------------------')
+            print(f'Músicos que tocam {instrumento}')
+            musicos_que_tocam_instrumento = list(filter(lambda musico: instrumento in musico['instrumentos'], musicos_compativeis_genero))
+            mostrar_musicos(musicos_que_tocam_instrumento)
         # TODO: criar lógica para criar configurações possiveis de integrantes na banda
 
     except Exception as erro:
@@ -326,6 +331,6 @@ if __name__ == '__main__':
     'id': 1, 
     'nome': 'NOME DA BANDA', 
     'integrantes': [], 
-    'genero_musical': 'rock', 
+    'genero_musical': 'ROCK', 
     'instrumentos': ['GUITARRA', 'TECLADO', 'VIOLAO']
     })
