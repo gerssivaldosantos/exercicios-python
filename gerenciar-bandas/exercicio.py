@@ -202,16 +202,47 @@ def validar_banda(banda: dict) -> list:
             for instrumento in musico['instrumentos']:
                 if instrumento in banda['instrumentos']:
                     musicos_compativeis_genero_instrumento.append(musico)
-                    continue
+                    break
         return musicos_compativeis_genero_instrumento
     except Exception as erro:
         print(f"Erro: {erro}")
         return []
 
-def form_montar_banda(musicos, banda):
+def form_montar_banda(musicos: list, banda: list) -> dict:
     """ retorna todas as possibilidades de combinações possiveis de banda considerando os instrumentos """
     #TODO: criar form listando todos os artistas para determinado instrumento e oferecer opção de adicionar á banda
-    pass
+    if len(musicos) > 0:
+        
+        for instrumento in banda['instrumentos']:
+            musicos_instrumento = list(filter(lambda musico: instrumento in musico['instrumentos'], musicos))
+            print("Seleção de músicos para integrar a banda")
+            if len(musicos_instrumento) > 0:
+                # Caso existam músicos que tocam o instrumento, exibe a lista de músicos
+                print(f'Músicos que tocam {instrumento.lower()}')
+                for i in range(len(musicos_instrumento)):
+                    print(f'[ {i} ]{musicos_instrumento[i]["nome"]}({musicos_instrumento[i]["email"]})')
+                # Pergunta ao usuário qual músico ele deseja adicionar à banda
+                parar = False
+                while not parar:
+                    try:
+                        resposta = int(input(f'Digite o número do músico que deseja adicionar à banda: '))
+                        if resposta < 0 or resposta >= len(musicos_instrumento):
+                            raise Exception('Número inválido')
+                        parar = True
+                    except Exception as erro:
+                        print(f'Erro: {erro}')
+                # Adiciona o músico à banda
+                banda['integrantes'].append(musicos_instrumento[resposta]['id'])
+                musicos = list(filter(lambda musico: musico['id'] != musicos_instrumento[resposta]['id'], musicos))
+        if (len(banda['instrumentos']) != len(banda['integrantes'])):
+            raise Exception('Não foi possível montar a banda. Pela ordem das escolhas de integrantes ')
+            print('( Algum instrumento ficou sem músico, isso pode ser contornando escolhendo outra configuração de banda )')
+        print(f'Banda {banda["nome"]} criada com sucesso!')
+        bandas = obter_json(path_bandas)
+        bandas.append(banda)
+        gravar_json(bandas, path_bandas)
+
+            
     
 
 def criar_combinacoes_bandas():
@@ -254,9 +285,9 @@ def form_banda():
         parar = True
     banda = {
         'id': obter_maior_id(obter_json(path_bandas)) + 1,
-        'nome': nome,
+        'nome': nome.upper(),
         'integrantes': [],
-        'genero_musical': genero,
+        'genero_musical': genero.upper(),
         'instrumentos': instrumentos
     }
     return banda
@@ -333,16 +364,11 @@ def main():
         elif opcao == '4':
             mostrar_bandas(buscar_banda_nome(input('Digite o nome da banda: ')))
         elif opcao == '5':
-            pass
+            banda = form_banda()
+            musicos = validar_banda(banda)
+            banda = form_montar_banda(musicos, banda)
         elif opcao == '0':
             sair = True
 
 if __name__ == '__main__':
-    banda_teste = {
-    'id': 1, 
-    'nome': 'NOME DA BANDA', 
-    'integrantes': [], 
-    'genero_musical': 'ROCK', 
-    'instrumentos': ['GUITARRA', 'TECLADO', 'VIOLAO']
-    }
     main()
