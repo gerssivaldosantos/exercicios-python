@@ -210,7 +210,6 @@ def validar_banda(banda: dict) -> list:
 
 def form_montar_banda(musicos: list, banda: list) -> dict:
     """ retorna todas as possibilidades de combinações possiveis de banda considerando os instrumentos """
-    #TODO: criar form listando todos os artistas para determinado instrumento e oferecer opção de adicionar á banda
     if len(musicos) > 0:
         
         for instrumento in banda['instrumentos']:
