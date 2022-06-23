@@ -46,6 +46,52 @@ O programa deverá exibir na tela todas as combinações possíveis de músicos
 (e-mail + instrumento).
 
 """
+def obter_musicos_por_ids(ids: list, musicos: list) -> list:
+    resultado = []
+    for id in ids:
+        musico = []
+        for item in filter(lambda x: x['id'] == id, musicos):
+            musico.append(item)
+        if len(musico)  > 0:
+            resultado.append(musico[0])
+    return resultado
+
+def analisar_combinacoes(ids, n):
+    if n == 0:
+        return [[]]
+     
+    combinacoes =[]
+
+    for i in range(0, len(ids)):
+
+        m = ids[i]
+        remIds = ids[i + 1:]
+         
+        restanteIds_combo = analisar_combinacoes(remIds, n-1)
+        for p in restanteIds_combo:
+            combinacao_id = [m, *p]
+            combinacoes.append(combinacao_id)
+           
+    return combinacoes
+
+def obter_musicos_por_combinacao(combinacoes):
+    combinacoes_musicos = []
+    for combinacao in combinacoes:
+        musicos_combinacao = obter_musicos_por_ids(combinacao)
+        # é trazido uma lista de objetos, a linha abaixo primeiro
+        # cada objeto é um músico, cada músico tem uma lista de instrumentos
+        # então é recolhido estes instrumentos, eles ficam disponizeis
+        # mas será uma linha totalmente aninhada, então é usada 
+        # List Comprehension para transformar em uma lista normal de strings
+        # essa lista de strings contém repetições, então é feito um set para
+        # remover estas repetições
+        instrumentos = list(set([item for sublist in list(map(lambda musico: musico['instrumentos'], musicos_combinacao)) for item in sublist]))
+
+        if len(instrumentos) == len(instrumentos_banda) and len(list(set(instrumentos + instrumentos_banda))) == len(instrumentos_banda):
+            combinacoes_musicos.append(musicos_combinacao)
+    return combinacoes_musicos
+
+
 
 def sobrescrever_id(dado, path):
     dados_existentes = obter_json(path)
@@ -241,8 +287,6 @@ def form_montar_banda(musicos: list, banda: list) -> dict:
         bandas.append(banda)
         gravar_json(bandas, path_bandas)
 
-            
-    
 
 def criar_combinacoes_bandas():
     # TODO: criar lógica para criar configurações possiveis de integrantes na banda
